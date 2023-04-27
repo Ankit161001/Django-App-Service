@@ -1,0 +1,78 @@
+{% extends 'basic.html' %}
+
+{%block content%}
+<div>
+
+    <div class="container">
+        {% if booked %}
+        <h3> Booked Time Slot </h3>
+        <table class="table table-hover mt-3">
+            <thread class="bg-dark text-white">
+                <tr>
+                    <td> No. </td>
+                    <td> Date </td>
+                    <td> Room Owner </td>
+                    <td> Room Name </td>
+                    <td> Start Time </td>
+                    <td> End Time </td>
+                    <td> Cancel </td>
+
+                </tr>
+            </thread>
+            <tbody>
+                {% for slot in booked%}
+                <tr>
+                    <td> {{ forloop.counter }} </td>
+                    <td> {{slot.date}}</td>
+                    <td><button button class="btn btn-primary btn-sm p-0 px-1 rounded-pill fw-bold" disabled>{{slot.manager_id}}</button></td>
+                    <td> {{slot.room_id}}</td>
+                    <td> {{slot.start_time | time:"H:i"}}</td>
+                    <td> {{slot.end_time | time:"H:i"}}</td>
+                    <td>
+                        <form method="POST" action="{% url 'delete_slot' slot.id %}">
+                            {% csrf_token %}
+                            <input type="submit" class="btn btn-sm btn-outline-dark" value="Cancel">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p> No upcoming slots yet.
+
+        {% endif %}
+
+        {% if canceled %}
+        <h3> Cancelled Time Slot </h3>
+        <table class="table table-hover mt-3">
+            <thred class="bg-dark text-white">
+                <tr>
+                    <td>No.</td>
+                    <td>Date</td>
+                    <td>Room Owner </td>
+                    <td>Room Name</td>
+                    <td>Start Time</td>
+                    <td>End Time</td>
+                </tr>
+            </thred>
+            <tbody>
+                {% for x in canceled %}
+                <tr>
+                    <td>{{forloop.counter}} </td>
+                    <td>{{x.date}}</td>
+                    <td><button button class="btn btn-primary btn-sm p-0 px-1 rounded-pill fw-bold" disabled>{{x.room_id.room_owner}}</button> </td>
+                    <td>{{x.room_id}}</td>
+                    <td>{{x.start_time | time:"H:i"}}</td>
+                    <td>{{x.end_time | time:"H:i"}}</td>
+                <tr/>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p> No slots canceled yet.
+        {% endif %}
+    </div>
+</div>
+
+{%endblock content%}
